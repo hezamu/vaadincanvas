@@ -9,8 +9,10 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,7 +26,8 @@ import com.vaadin.shared.ui.Connect;
 @SuppressWarnings("serial")
 @Connect(org.vaadin.hezamu.canvas.Canvas.class)
 public class CanvasConnector extends AbstractComponentConnector implements
-		SimpleManagedLayout, PostLayoutListener, ClickHandler {
+		SimpleManagedLayout, PostLayoutListener, MouseUpHandler,
+		MouseDownHandler {
 	private boolean needsDraw = false;
 
 	private final List<Command> commands;
@@ -42,7 +45,8 @@ public class CanvasConnector extends AbstractComponentConnector implements
 	protected void init() {
 		super.init();
 
-		getWidget().addClickHandler(this);
+		getWidget().addMouseUpHandler(this);
+		getWidget().addMouseDownHandler(this);
 
 		registerRpc(CanvasClientRpc.class, new CanvasClientRpc() {
 			private static final long serialVersionUID = -7521521510799765779L;
@@ -246,16 +250,6 @@ public class CanvasConnector extends AbstractComponentConnector implements
 					@Override
 					public void execute() {
 						ctx.setMiterLimit(miterLimit);
-					}
-				});
-			}
-
-			@Override
-			public void setColorStrokeStyle(final String color) {
-				runCommand(new Command() {
-					@Override
-					public void execute() {
-						ctx.setStrokeStyle(color);
 					}
 				});
 			}
@@ -533,8 +527,14 @@ public class CanvasConnector extends AbstractComponentConnector implements
 	}
 
 	@Override
-	public void onClick(ClickEvent event) {
-		rpc.click(event.getRelativeX(getWidget().getElement()),
+	public void onMouseDown(MouseDownEvent event) {
+		rpc.mouseDown(event.getRelativeX(getWidget().getElement()),
+				event.getRelativeY(getWidget().getElement()));
+	}
+
+	@Override
+	public void onMouseUp(MouseUpEvent event) {
+		rpc.mouseUp(event.getRelativeX(getWidget().getElement()),
 				event.getRelativeY(getWidget().getElement()));
 	}
 }

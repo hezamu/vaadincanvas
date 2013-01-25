@@ -18,18 +18,22 @@ public class Canvas extends AbstractComponent {
 
 	public Canvas() {
 		registerRpc(new CanvasServerRpc() {
-			public void click(int x, int y) {
+			public void mouseDown(int x, int y) {
 				fireMouseDown(x, y);
+			}
+
+			public void mouseUp(int x, int y) {
+				fireMouseUp(x, y);
 			}
 		});
 	}
 
-	public void drawImage(String url, Double offsetX, Double offsetY) {
+	public void drawImage(String url, double offsetX, double offsetY) {
 		rpc.drawImage(url, offsetX, offsetY);
 	}
 
-	public void drawImage(String url, Double offsetX, Double offsetY,
-			Double width, Double height) {
+	public void drawImage(String url, double offsetX, double offsetY,
+			double width, double height) {
 		rpc.drawImage(url, offsetX, offsetY, width, height);
 	}
 
@@ -42,9 +46,9 @@ public class Canvas extends AbstractComponent {
 		rpc.clear();
 	}
 
-	public void drawImage(String url, Double sourceX, Double sourceY,
-			Double sourceWidth, Double sourceHeight, Double destX,
-			Double destY, Double destWidth, Double destHeight) {
+	public void drawImage(String url, double sourceX, double sourceY,
+			double sourceWidth, double sourceHeight, double destX,
+			double destY, double destWidth, double destHeight) {
 		rpc.drawImage(url, sourceX, sourceY, sourceWidth, sourceHeight, destX,
 				destY, destWidth, destHeight);
 	}
@@ -53,7 +57,7 @@ public class Canvas extends AbstractComponent {
 		rpc.fill();
 	}
 
-	public void fillText(String text, Double x, Double y, Double maxWidth) {
+	public void fillText(String text, double x, double y, double maxWidth) {
 		rpc.fillText(text, x, y, maxWidth);
 	}
 
@@ -69,23 +73,23 @@ public class Canvas extends AbstractComponent {
 		rpc.setTextBaseline(textBaseline);
 	}
 
-	public void lineTo(Double x, Double y) {
+	public void lineTo(double x, double y) {
 		rpc.lineTo(x, y);
 	}
 
-	public void moveTo(Double x, Double y) {
+	public void moveTo(double x, double y) {
 		rpc.moveTo(x, y);
 	}
 
-	public void quadraticCurveTo(Double cpx, Double cpy, Double x, Double y) {
+	public void quadraticCurveTo(double cpx, double cpy, double x, double y) {
 		rpc.quadraticCurveTo(cpx, cpy, x, y);
 	}
 
-	public void rect(Double startX, Double startY, Double width, Double height) {
+	public void rect(double startX, double startY, double width, double height) {
 		rpc.rect(startX, startY, width, height);
 	}
 
-	public void rotate(Double angle) {
+	public void rotate(double angle) {
 		rpc.rotate(angle);
 	}
 
@@ -101,38 +105,34 @@ public class Canvas extends AbstractComponent {
 		rpc.setLineJoin(lineJoin);
 	}
 
-	public void setLineWidth(Double width) {
+	public void setLineWidth(double width) {
 		rpc.setLineWidth(width);
 	}
 
-	public void setMiterLimit(Double miterLimit) {
+	public void setMiterLimit(double miterLimit) {
 		rpc.setMiterLimit(miterLimit);
 	}
 
-	public void setColorStrokeStyle(String color) {
-		rpc.setColorStrokeStyle(color);
-	}
-
-	public void strokeRect(Double startX, Double startY, Double width,
-			Double height) {
+	public void strokeRect(double startX, double startY, double width,
+			double height) {
 		rpc.strokeRect(startX, startY, width, height);
 	}
 
-	public void transform(Double m11, Double m12, Double m21, Double m22,
-			Double dx, Double dy) {
+	public void transform(double m11, double m12, double m21, double m22,
+			double dx, double dy) {
 		rpc.transform(m11, m12, m21, m22, dx, dy);
 	}
 
-	public void arc(Double x, Double y, Double radius, Double startAngle,
-			Double endAngle, Boolean antiClockwise) {
+	public void arc(double x, double y, double radius, double startAngle,
+			double endAngle, Boolean antiClockwise) {
 		rpc.arc(x, y, radius, startAngle, endAngle, antiClockwise);
 	}
 
-	public void translate(Double x, Double y) {
+	public void translate(double x, double y) {
 		rpc.translate(x, y);
 	}
 
-	public void scale(Double x, Double y) {
+	public void scale(double x, double y) {
 		rpc.scale(x, y);
 	}
 
@@ -156,7 +156,7 @@ public class Canvas extends AbstractComponent {
 		rpc.beginPath();
 	}
 
-	public void setGlobalAlpha(Double alpha) {
+	public void setGlobalAlpha(double alpha) {
 		rpc.setGlobalAlpha(alpha);
 	}
 
@@ -168,25 +168,25 @@ public class Canvas extends AbstractComponent {
 		rpc.setGlobalCompositeOperation(mode);
 	}
 
-	public void setStrokeStyle(Integer r, Integer g, Integer b) {
+	public void setStrokeStyle(int r, int g, int b) {
 		setStrokeStyle("rgb(" + r + "," + g + "," + b + ")");
 	}
 
-	public void setFillStyle(Integer r, Integer g, Integer b) {
+	public void setFillStyle(int r, int g, int b) {
 		setFillStyle("rgb(" + r + "," + g + "," + b + ")");
 	}
 
-	public void createLinearGradient(String name, Double x0, Double y0,
-			Double x1, Double y1) {
+	public void createLinearGradient(String name, double x0, double y0,
+			double x1, double y1) {
 		rpc.createLinearGradient(name, x0, y0, x1, y1);
 	}
 
-	public void createRadialGradient(String name, Double x0, Double y0,
-			Double r0, Double x1, Double y1, Double r1) {
+	public void createRadialGradient(String name, double x0, double y0,
+			double r0, double x1, double y1, double r1) {
 		rpc.createRadialGradient(name, x0, y0, r0, x1, y1, r1);
 	}
 
-	public void addColorStop(String gradient, Double offset, String color) {
+	public void addColorStop(String gradient, double offset, String color) {
 		rpc.addColorStop(gradient, offset, color);
 	}
 
@@ -221,7 +221,7 @@ public class Canvas extends AbstractComponent {
 	}
 
 	public interface CanvasMouseUpListener {
-		public void mouseDown(int x, int y);
+		public void mouseUp(int x, int y);
 	}
 
 	public void addListener(CanvasMouseUpListener listener) {
@@ -238,7 +238,7 @@ public class Canvas extends AbstractComponent {
 
 	private void fireMouseUp(int x, int y) {
 		for (CanvasMouseUpListener listener : upListeners) {
-			listener.mouseDown(x, y);
+			listener.mouseUp(x, y);
 		}
 	}
 }

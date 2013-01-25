@@ -43,8 +43,6 @@ public interface CanvasClientRpc extends ClientRpc {
 
 	public void setMiterLimit(Double miterLimit);
 
-	public void setColorStrokeStyle(String color);
-
 	public void strokeRect(Double startX, Double startY, Double width,
 			Double height);
 
