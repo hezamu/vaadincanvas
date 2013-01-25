@@ -4,11 +4,13 @@ This is a server-side Vaadin add-on for the HTML5 canvas. You add the ```Canvas`
 
 ## Compatibility
 
-This add-on is compatible with Vaadin 7 RC2 and up. A canvas add-on for Vaadin 6 is available [here](https://vaadin.com/add-on/canvaswidget)
+This add-on is compatible with Vaadin 7 RC2 and up. A canvas add-on for Vaadin 6 is available [here](https://vaadin.com/add-on/canvaswidget).
 
 ## Installation
 
-Install the add-on to your Vaadin project by simply copying the JAR file from [Vaadin Directory](https://vaadin.com/addon/canvas) and *compiling your widgetset* (more details [here](https://vaadin.com/directory/help/using-vaadin-add-ons)). Or alternatively you can add the add-on to your project using Maven (see the Maven POM snippet required from [Vaadin Directory](https://vaadin.com/addon/canvas)).
+To install the add-on to your Vaadin project just copy the JAR file from [Vaadin Directory](https://vaadin.com/addon/canvas), and compile your widgetset (more details [here](https://vaadin.com/directory/help/using-vaadin-add-ons)).
+
+Alternatively you can add the add-on to your project using Maven (see the Maven POM snippet required from [Vaadin Directory](https://vaadin.com/addon/canvas)).
 
 ## Basic Usage
 
