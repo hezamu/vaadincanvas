@@ -1,6 +1,7 @@
 package org.vaadin.hezamu.canvas.client.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,25 +10,30 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.ErrorEvent;
+import com.google.gwt.event.dom.client.ErrorHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 
 @SuppressWarnings("serial")
 @Connect(org.vaadin.hezamu.canvas.Canvas.class)
 public class CanvasConnector extends AbstractComponentConnector implements
-		SimpleManagedLayout, PostLayoutListener, MouseUpHandler,
-		MouseDownHandler {
+		SimpleManagedLayout, PostLayoutListener {
 	private boolean needsDraw = false;
 
 	private final List<Command> commands;
@@ -45,8 +51,15 @@ public class CanvasConnector extends AbstractComponentConnector implements
 	protected void init() {
 		super.init();
 
-		getWidget().addMouseUpHandler(this);
-		getWidget().addMouseDownHandler(this);
+		getWidget().addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				MouseEventDetails med = MouseEventDetailsBuilder
+						.buildMouseEventDetails(event.getNativeEvent(),
+								getWidget().getElement());
+
+				rpc.clicked(med);
+			}
+		});
 
 		registerRpc(CanvasClientRpc.class, new CanvasClientRpc() {
 			private static final long serialVersionUID = -7521521510799765779L;
@@ -65,36 +78,41 @@ public class CanvasConnector extends AbstractComponentConnector implements
 			}
 
 			@Override
-			public void drawImage(final String url, final Double offsetX,
+			public void drawImage1(final String url, final Double offsetX,
 					final Double offsetY) {
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						Image.prefetch(url);
+						VConsole.log("Drawing " + url + "\n at " + offsetX
+								+ "," + offsetY);
 						ctx.drawImage(
 								ImageElement.as(new Image(url).getElement()),
 								offsetX, offsetY);
+						VConsole.log("Drawing complete");
 					}
 				});
 			}
 
 			@Override
-			public void drawImage(final String url, final Double offsetX,
-					final Double offsetY, final Double width,
-					final Double height) {
+			public void drawImage2(final String url, final Double offsetX,
+					final Double offsetY, final Double imageWidth,
+					final Double imageHeight) {
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						Image.prefetch(url);
+						VConsole.log("Drawing " + url + "\n at " + offsetX
+								+ "," + offsetY + " w" + imageWidth + " h"
+								+ imageHeight);
 						ctx.drawImage(
 								ImageElement.as(new Image(url).getElement()),
-								offsetX, offsetY, width, height);
+								offsetX, offsetY, imageWidth, imageHeight);
+						VConsole.log("Drawing complete");
 					}
 				});
 			}
 
 			@Override
-			public void drawImage(final String url, final Double sourceX,
+			public void drawImage3(final String url, final Double sourceX,
 					final Double sourceY, final Double sourceWidth,
 					final Double sourceHeight, final Double destX,
 					final Double destY, final Double destWidth,
@@ -102,11 +120,15 @@ public class CanvasConnector extends AbstractComponentConnector implements
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						Image.prefetch(url);
+						VConsole.log("Drawing " + url + "\n from " + sourceX
+								+ "," + sourceY + " w" + sourceWidth + " h"
+								+ sourceHeight + " to " + destX + "," + destY
+								+ " " + destWidth + "x" + destHeight);
 						ctx.drawImage(
 								ImageElement.as(new Image(url).getElement()),
 								sourceX, sourceY, sourceWidth, sourceHeight,
 								destX, destY, destWidth, destHeight);
+						VConsole.log("Drawing complete");
 					}
 				});
 			}
@@ -185,11 +207,11 @@ public class CanvasConnector extends AbstractComponentConnector implements
 
 			@Override
 			public void rect(final Double startX, final Double startY,
-					final Double width, final Double height) {
+					final Double rectWidth, final Double rectHeight) {
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						ctx.rect(startX, startY, width, height);
+						ctx.rect(startX, startY, rectWidth, rectHeight);
 					}
 				});
 			}
@@ -235,11 +257,11 @@ public class CanvasConnector extends AbstractComponentConnector implements
 			}
 
 			@Override
-			public void setLineWidth(final Double width) {
+			public void setLineWidth(final Double lineWidth) {
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						ctx.setLineWidth(width);
+						ctx.setLineWidth(lineWidth);
 					}
 				});
 			}
@@ -256,11 +278,12 @@ public class CanvasConnector extends AbstractComponentConnector implements
 
 			@Override
 			public void strokeRect(final Double startX, final Double startY,
-					final Double width, final Double height) {
+					final Double strokeWidth, final Double strokeHeight) {
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						ctx.strokeRect(startX, startY, width, height);
+						ctx.strokeRect(startX, startY, strokeWidth,
+								strokeHeight);
 					}
 				});
 			}
@@ -475,6 +498,42 @@ public class CanvasConnector extends AbstractComponentConnector implements
 					}
 				});
 			}
+
+			@Override
+			public void loadImages(final String[] urls) {
+				final List<String> imagesToLoad = new ArrayList<String>();
+				imagesToLoad.addAll(Arrays.asList(urls));
+
+				for (final String url : urls) {
+					final Image image = new Image(url);
+
+					image.addLoadHandler(new LoadHandler() {
+						@Override
+						public void onLoad(LoadEvent event) {
+							RootPanel.get().remove(image);
+							imagesToLoad.remove(url);
+
+							if (imagesToLoad.isEmpty())
+								rpc.imagesLoaded();
+						}
+					});
+
+					image.addErrorHandler(new ErrorHandler() {
+						@Override
+						public void onError(ErrorEvent event) {
+							RootPanel.get().remove(image);
+							imagesToLoad.remove(url);
+
+							if (imagesToLoad.isEmpty())
+								rpc.imagesLoaded();
+						}
+					});
+
+					// Force loading of the image
+					image.setVisible(false);
+					RootPanel.get().add(image);
+				}
+			}
 		});
 	}
 
@@ -524,17 +583,5 @@ public class CanvasConnector extends AbstractComponentConnector implements
 
 	public void clearCommands() {
 		commands.clear();
-	}
-
-	@Override
-	public void onMouseDown(MouseDownEvent event) {
-		rpc.mouseDown(event.getRelativeX(getWidget().getElement()),
-				event.getRelativeY(getWidget().getElement()));
-	}
-
-	@Override
-	public void onMouseUp(MouseUpEvent event) {
-		rpc.mouseUp(event.getRelativeX(getWidget().getElement()),
-				event.getRelativeY(getWidget().getElement()));
 	}
 }
