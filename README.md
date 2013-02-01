@@ -14,8 +14,34 @@ Alternatively you can add the add-on to your project using Maven (see the Maven 
 
 ## Basic Usage
 
-TODO
+Here is a trivial Vaadin application that uses the add-on:
+
+   public class TestUI extends UI {
+      private Canvas canvas;
+
+      @Override
+      protected void init(VaadinRequest request) {
+         VerticalLayout content = new VerticalLayout();
+         setContent(content);
+
+         // Instantiate the component and add it to your UI
+         content.addComponent(canvas = new Canvas());
+
+         // Draw a 20x20 filled rectangle with the upper left corner
+         // in coordinate 10,10. It will be filled with the default
+         // color which is black.
+         canvas.fillRect(10,  10,  20,  20);
+      }
+   }
 
 ## Mouse events
 
-TODO
+The `Canvas` component supports listening to mouse clicks within the canvas area. It works simply by adding a ```CanvasClickListener``` to the component. Unfortunately the HTML5 Canvas API doesn't support objects, so you can only find out the coordinates where the click happened.
+
+You can find out other details related to the click event using the ```MouseEventDetails``` instance you receive from the listener.
+
+## Working with images
+
+The HTML5 Canvas image support contains a few pitfalls that complicate drawing images to the canvas. In practice, you should ensure that the image has been preloaded to the browser cache before trying to draw it.
+
+To make sure that your images are preloaded before drawing you should first tell the component to load your images using the ```loadImages(String[] urls)``` method, and add a ```CanvasImageLoadListener``` to the ```Canvas```. The listener will notify you when the images have been loaded, and you can start issuing ```drawImage()``` that work with the preloaded images.
