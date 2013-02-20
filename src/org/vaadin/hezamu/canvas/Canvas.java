@@ -220,19 +220,19 @@ public class Canvas extends AbstractComponent {
 
 	/**
 	 * Adds a point to the current path by using the specified control points
-	 * that represent a quadratic BŽzier curve.
+	 * that represent a quadratic Bï¿½zier curve.
 	 * 
-	 * A quadratic BŽzier curve requires two points. The first point is a
-	 * control point that is used in the quadratic BŽzier calculation and the
+	 * A quadratic Bï¿½zier curve requires two points. The first point is a
+	 * control point that is used in the quadratic Bï¿½zier calculation and the
 	 * second point is the ending point for the curve. The starting point for
 	 * the curve is the last point in the current path. If a path does not
 	 * exist, use the {@link #beginPath()} and {@link #moveTo(double, double)}
 	 * methods to define a starting point.
 	 * 
 	 * @param cpx
-	 *            The X coordinate of the BŽzier control point
+	 *            The X coordinate of the Bï¿½zier control point
 	 * @param cpy
-	 *            The Y coordinate of the BŽzier control point
+	 *            The Y coordinate of the Bï¿½zier control point
 	 * @param x
 	 *            The X coordinate of the ending point
 	 * @param y
@@ -240,6 +240,25 @@ public class Canvas extends AbstractComponent {
 	 */
 	public void quadraticCurveTo(double cpx, double cpy, double x, double y) {
 		rpc.quadraticCurveTo(cpx, cpy, x, y);
+	}
+	
+	/**
+	 * Draws a cubic Bezier curve from the current point to the point (x, y), with control points (cp1x, cp1y) and (cp2x, cp2y).
+	 *
+	 * @param cp1x - the x coordinate of the first control point
+	 * @param cp1y - the y coordinate of the first control point
+	 * @param cp2x - the x coordinate of the second control point
+	 * @param cp2y - the y coordinate of the second control point
+	 * @param x - the x coordinate of the end poin
+	 * @param y - the y coordinate of the end point
+	 */
+	public void bezierCurveTo(double cp1x,
+            double cp1y,
+            double cp2x,
+            double cp2y,
+            double x,
+            double y) {
+		rpc.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
 	}
 
 	/**
