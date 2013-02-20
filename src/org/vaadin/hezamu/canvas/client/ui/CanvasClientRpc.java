@@ -28,6 +28,8 @@ public interface CanvasClientRpc extends ClientRpc {
 	public void moveTo(Double x, Double y);
 
 	public void quadraticCurveTo(Double cpx, Double cpy, Double x, Double y);
+	
+	public void bezierCurveTo(double cp1x, double cp1y, double cp2x, double cp2y, double x, double y);
 
 	public void rect(Double startX, Double startY, Double rectWidth,
 			Double rectHeight);
@@ -117,10 +119,10 @@ public interface CanvasClientRpc extends ClientRpc {
 	// public void clip();
 
 	// The bezierCurveTo() method adds a point to the current path by using the
-	// specified control points that represent a cubic BŽzier curve.
+	// specified control points that represent a cubic Bï¿½zier curve.
 	//
 	// A cubic bezier curve requires three points. The first two points are
-	// control points that are used in the cubic BŽzier calculation and the last
+	// control points that are used in the cubic Bï¿½zier calculation and the last
 	// point is the ending point for the curve. The starting point for the curve
 	// is the last point in the current path. If a path does not exist, use the
 	// beginPath() and moveTo() methods to define a starting point.
