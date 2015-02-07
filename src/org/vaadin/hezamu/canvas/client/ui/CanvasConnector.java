@@ -16,6 +16,12 @@ import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -60,6 +66,37 @@ public class CanvasConnector extends AbstractComponentConnector implements
 				rpc.clicked(med);
 			}
 		});
+		
+		getWidget().addMouseMoveHandler(new MouseMoveHandler() {
+			@Override
+			public void onMouseMove(MouseMoveEvent event) {
+				MouseEventDetails med = MouseEventDetailsBuilder
+						.buildMouseEventDetails(event.getNativeEvent(),
+								getWidget().getElement());
+				rpc.onMouseMove(med);
+			}
+		});
+
+		getWidget().addMouseDownHandler(new MouseDownHandler() {
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
+				MouseEventDetails med = MouseEventDetailsBuilder
+						.buildMouseEventDetails(event.getNativeEvent(),
+								getWidget().getElement());
+				rpc.onClickDown(med);
+			}
+		});
+
+		getWidget().addMouseUpHandler(new MouseUpHandler() {
+			@Override
+			public void onMouseUp(MouseUpEvent event) {
+				MouseEventDetails med = MouseEventDetailsBuilder
+						.buildMouseEventDetails(event.getNativeEvent(),
+								getWidget().getElement());
+				rpc.onClickUp(med);
+			}
+		});
+
 
 		registerRpc(CanvasClientRpc.class, new CanvasClientRpc() {
 			private static final long serialVersionUID = -7521521510799765779L;
