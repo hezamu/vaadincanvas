@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.vaadin.hezamu.canvas.client.ui.CanvasClientRpc;
 import org.vaadin.hezamu.canvas.client.ui.CanvasServerRpc;
+import org.vaadin.hezamu.canvas.client.ui.CanvasState;
 
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.AbstractComponent;
 
-// TODO: Auto-generated Javadoc
 /**
  * HTML5 Canvas add-on for Vaadin 7.
  * 
@@ -22,8 +22,10 @@ import com.vaadin.ui.AbstractComponent;
  */
 @SuppressWarnings("serial")
 public class Canvas extends AbstractComponent {
-	private final List<CanvasClickListener> clickListeners = new ArrayList<CanvasClickListener>();
 	private final List<CanvasImageLoadListener> imageLoadListeners = new ArrayList<CanvasImageLoadListener>();
+	private final List<CanvasMouseMoveListener> mouseMoveListeners = new ArrayList<CanvasMouseMoveListener>();
+	private final List<CanvasMouseDownListener> mouseDownListeners = new ArrayList<CanvasMouseDownListener>();
+	private final List<CanvasMouseUpListener> mouseUpListeners = new ArrayList<CanvasMouseUpListener>();
 	private final CanvasClientRpc rpc = getRpcProxy(CanvasClientRpc.class);
 
 	/**
@@ -31,12 +33,24 @@ public class Canvas extends AbstractComponent {
 	 */
 	public Canvas() {
 		registerRpc(new CanvasServerRpc() {
-			public void clicked(MouseEventDetails med) {
-				fireClicked(med);
-			}
-
+			@Override
 			public void imagesLoaded() {
 				fireImagesLoaded();
+			}
+
+			@Override
+			public void mouseMoved(MouseEventDetails mouseDetails) {
+				fireMouseMove(mouseDetails);
+			}
+
+			@Override
+			public void mouseDown(MouseEventDetails med) {
+				fireMouseDown();
+			}
+
+			@Override
+			public void mouseUp(MouseEventDetails med) {
+				fireMouseUp();
 			}
 		});
 	}
@@ -220,19 +234,19 @@ public class Canvas extends AbstractComponent {
 
 	/**
 	 * Adds a point to the current path by using the specified control points
-	 * that represent a quadratic B�zier curve.
+	 * that represent a quadratic Bezier curve.
 	 * 
-	 * A quadratic B�zier curve requires two points. The first point is a
-	 * control point that is used in the quadratic B�zier calculation and the
+	 * A quadratic Bezier curve requires two points. The first point is a
+	 * control point that is used in the quadratic Bezier calculation and the
 	 * second point is the ending point for the curve. The starting point for
 	 * the curve is the last point in the current path. If a path does not
 	 * exist, use the {@link #beginPath()} and {@link #moveTo(double, double)}
 	 * methods to define a starting point.
 	 * 
 	 * @param cpx
-	 *            The X coordinate of the B�zier control point
+	 *            The X coordinate of the Bezier control point
 	 * @param cpy
-	 *            The Y coordinate of the B�zier control point
+	 *            The Y coordinate of the Bezier control point
 	 * @param x
 	 *            The X coordinate of the ending point
 	 * @param y
@@ -241,23 +255,26 @@ public class Canvas extends AbstractComponent {
 	public void quadraticCurveTo(double cpx, double cpy, double x, double y) {
 		rpc.quadraticCurveTo(cpx, cpy, x, y);
 	}
-	
+
 	/**
-	 * Draws a cubic Bezier curve from the current point to the point (x, y), with control points (cp1x, cp1y) and (cp2x, cp2y).
+	 * Draws a cubic Bezier curve from the current point to the point (x, y),
+	 * with control points (cp1x, cp1y) and (cp2x, cp2y).
 	 *
-	 * @param cp1x - the x coordinate of the first control point
-	 * @param cp1y - the y coordinate of the first control point
-	 * @param cp2x - the x coordinate of the second control point
-	 * @param cp2y - the y coordinate of the second control point
-	 * @param x - the x coordinate of the end poin
-	 * @param y - the y coordinate of the end point
+	 * @param cp1x
+	 *            - the x coordinate of the first control point
+	 * @param cp1y
+	 *            - the y coordinate of the first control point
+	 * @param cp2x
+	 *            - the x coordinate of the second control point
+	 * @param cp2y
+	 *            - the y coordinate of the second control point
+	 * @param x
+	 *            - the x coordinate of the end poin
+	 * @param y
+	 *            - the y coordinate of the end point
 	 */
-	public void bezierCurveTo(double cp1x,
-            double cp1y,
-            double cp2x,
-            double cp2y,
-            double x,
-            double y) {
+	public void bezierCurveTo(double cp1x, double cp1y, double cp2x,
+			double cp2y, double x, double y) {
 		rpc.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
 	}
 
@@ -747,58 +764,6 @@ public class Canvas extends AbstractComponent {
 	}
 
 	/**
-	 * The listener interface for receiving canvasClick events. The class that
-	 * is interested in processing a canvasClick event implements this
-	 * interface, and the object created with that class is registered with a
-	 * component using the component's
-	 * <code>addCanvasClickListener<code> method. When
-	 * the canvasClick event occurs, that object's appropriate
-	 * method is invoked.
-	 * 
-	 * @see CanvasClickEvent
-	 */
-	public interface CanvasClickListener {
-
-		/**
-		 * A mouse was clicked in a canvas.
-		 * 
-		 * @param med
-		 *            the mouse event details
-		 */
-		public void clicked(MouseEventDetails med);
-	}
-
-	/**
-	 * Adds the CanvasClickListener.
-	 * 
-	 * @param listener
-	 *            the listener
-	 */
-	public void addListener(CanvasClickListener listener) {
-		if (!clickListeners.contains(listener)) {
-			clickListeners.add(listener);
-		}
-	}
-
-	/**
-	 * Removes a CanvasClickListener.
-	 * 
-	 * @param listener
-	 *            the listener
-	 */
-	public void removeListener(CanvasClickListener listener) {
-		if (clickListeners.contains(listener)) {
-			clickListeners.remove(listener);
-		}
-	}
-
-	private void fireClicked(MouseEventDetails med) {
-		for (CanvasClickListener listener : clickListeners) {
-			listener.clicked(med);
-		}
-	}
-
-	/**
 	 * The listener interface for receiving canvasImageLoad events. The class
 	 * that is interested in processing a canvasImageLoad event implements this
 	 * interface, and the object created with that class is registered with a
@@ -823,7 +788,7 @@ public class Canvas extends AbstractComponent {
 	 * @param listener
 	 *            the listener
 	 */
-	public void addListener(CanvasImageLoadListener listener) {
+	public void addImageLoadListener(CanvasImageLoadListener listener) {
 		if (!imageLoadListeners.contains(listener)) {
 			imageLoadListeners.add(listener);
 		}
@@ -845,5 +810,158 @@ public class Canvas extends AbstractComponent {
 		for (CanvasImageLoadListener listener : imageLoadListeners) {
 			listener.imagesLoaded();
 		}
+	}
+
+	/**
+	 * The listener interface for receiving CanvasMouseMove events. The class
+	 * that is interested in processing a CanvasMouseMove event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's
+	 * <code>addCanvasMouseMoveListener<code> method. When
+	 * the CanvasMouseMove event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see CanvasMouseMoveEvent
+	 */
+	public interface CanvasMouseMoveListener {
+
+		/**
+		 * The canvas mouse move event.
+		 */
+		public void onMove(MouseEventDetails mouseDetails);
+	}
+
+	/**
+	 * Adds a CanvasMouseMoveListener.
+	 *
+	 * @param listener
+	 *            the listener
+	 */
+	public void addMouseMoveListener(CanvasMouseMoveListener listener) {
+		if (!mouseMoveListeners.contains(listener)) {
+			mouseMoveListeners.add(listener);
+			getState().listenMouseMove = true;
+		}
+	}
+
+	/**
+	 * Removes a CanvasMouseMoveListener.
+	 *
+	 * @param listener
+	 *            the listener
+	 */
+	public void removeListener(CanvasMouseMoveListener listener) {
+		if (mouseMoveListeners.contains(listener)) {
+			mouseMoveListeners.remove(listener);
+		}
+	}
+
+	private void fireMouseMove(MouseEventDetails mouseDetails) {
+		for (CanvasMouseMoveListener listener : mouseMoveListeners) {
+			listener.onMove(mouseDetails);
+		}
+	}
+
+	/**
+	 * The listener interface for receiving CanvasMouseDown events. The class
+	 * that is interested in processing a CanvasMouseDown event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's
+	 * <code>addCanvasMouseDownListener<code> method. When
+	 * the CanvasMouseDown event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see CanvasMouseDownEvent
+	 */
+	public interface CanvasMouseDownListener {
+
+		/**
+		 * The canvas mouse Down event.
+		 */
+		public void onMouseDown();
+	}
+
+	/**
+	 * Adds a CanvasMouseDownListener.
+	 *
+	 * @param listener
+	 *            the listener
+	 */
+	public void addMouseDownListener(CanvasMouseDownListener listener) {
+		if (!mouseDownListeners.contains(listener)) {
+			mouseDownListeners.add(listener);
+		}
+	}
+
+	/**
+	 * Removes a CanvasMouseDownListener.
+	 *
+	 * @param listener
+	 *            the listener
+	 */
+	public void removeListener(CanvasMouseDownListener listener) {
+		if (mouseDownListeners.contains(listener)) {
+			mouseDownListeners.remove(listener);
+		}
+	}
+
+	private void fireMouseDown() {
+		for (CanvasMouseDownListener listener : mouseDownListeners) {
+			listener.onMouseDown();
+		}
+	}
+
+	/**
+	 * The listener interface for receiving CanvasMouseUp events. The class that
+	 * is interested in processing a CanvasMouseUp event implements this
+	 * interface, and the object created with that class is registered with a
+	 * component using the component's
+	 * <code>addCanvasMouseUpListener<code> method. When
+	 * the CanvasMouseUp event occurs, that object's appropriate
+	 * method is invoked.
+	 *
+	 * @see CanvasMouseUpEvent
+	 */
+	public interface CanvasMouseUpListener {
+
+		/**
+		 * The canvas mouse Down event.
+		 */
+		public void onMouseUp();
+	}
+
+	/**
+	 * Adds a CanvasMouseUpListener.
+	 *
+	 * @param listener
+	 *            the listener
+	 */
+	public void addMouseUpListener(CanvasMouseUpListener listener) {
+		if (!mouseUpListeners.contains(listener)) {
+			mouseUpListeners.add(listener);
+		}
+	}
+
+	/**
+	 * Removes a CanvasMouseUpListener.
+	 *
+	 * @param listener
+	 *            the listener
+	 */
+	public void removeListener(CanvasMouseUpListener listener) {
+		if (mouseUpListeners.contains(listener)) {
+			mouseUpListeners.remove(listener);
+		}
+	}
+
+	private void fireMouseUp() {
+		for (CanvasMouseUpListener listener : mouseUpListeners) {
+			listener.onMouseUp();
+		}
+	}
+
+	@Override
+	public CanvasState getState() {
+		return (CanvasState) super.getState();
 	}
 }

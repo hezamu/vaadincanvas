@@ -5,23 +5,27 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.CanvasGradient;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -43,6 +47,9 @@ public class CanvasConnector extends AbstractComponentConnector implements
 	private final CanvasServerRpc rpc = RpcProxy.create(CanvasServerRpc.class,
 			this);
 
+	private final static Logger logger = Logger.getLogger(CanvasConnector.class
+			.getName());
+
 	public CanvasConnector() {
 		commands = new ArrayList<Command>();
 	}
@@ -51,13 +58,23 @@ public class CanvasConnector extends AbstractComponentConnector implements
 	protected void init() {
 		super.init();
 
-		getWidget().addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
+		getWidget().addMouseDownHandler(new MouseDownHandler() {
+			@Override
+			public void onMouseDown(MouseDownEvent event) {
 				MouseEventDetails med = MouseEventDetailsBuilder
 						.buildMouseEventDetails(event.getNativeEvent(),
 								getWidget().getElement());
+				rpc.mouseDown(med);
+			}
+		});
 
-				rpc.clicked(med);
+		getWidget().addMouseUpHandler(new MouseUpHandler() {
+			@Override
+			public void onMouseUp(MouseUpEvent event) {
+				MouseEventDetails med = MouseEventDetailsBuilder
+						.buildMouseEventDetails(event.getNativeEvent(),
+								getWidget().getElement());
+				rpc.mouseUp(med);
 			}
 		});
 
@@ -83,12 +100,12 @@ public class CanvasConnector extends AbstractComponentConnector implements
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						VConsole.log("Drawing " + url + "\n at " + offsetX
-								+ "," + offsetY);
+						logger.fine("Drawing " + url + "\n at " + offsetX + ","
+								+ offsetY);
 						ctx.drawImage(
 								ImageElement.as(new Image(url).getElement()),
 								offsetX, offsetY);
-						VConsole.log("Drawing complete");
+						logger.fine("Drawing complete");
 					}
 				});
 			}
@@ -100,13 +117,13 @@ public class CanvasConnector extends AbstractComponentConnector implements
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						VConsole.log("Drawing " + url + "\n at " + offsetX
-								+ "," + offsetY + " w" + imageWidth + " h"
+						logger.fine("Drawing " + url + "\n at " + offsetX + ","
+								+ offsetY + " w" + imageWidth + " h"
 								+ imageHeight);
 						ctx.drawImage(
 								ImageElement.as(new Image(url).getElement()),
 								offsetX, offsetY, imageWidth, imageHeight);
-						VConsole.log("Drawing complete");
+						logger.fine("Drawing complete");
 					}
 				});
 			}
@@ -120,7 +137,7 @@ public class CanvasConnector extends AbstractComponentConnector implements
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						VConsole.log("Drawing " + url + "\n from " + sourceX
+						logger.fine("Drawing " + url + "\n from " + sourceX
 								+ "," + sourceY + " w" + sourceWidth + " h"
 								+ sourceHeight + " to " + destX + "," + destY
 								+ " " + destWidth + "x" + destHeight);
@@ -128,7 +145,7 @@ public class CanvasConnector extends AbstractComponentConnector implements
 								ImageElement.as(new Image(url).getElement()),
 								sourceX, sourceY, sourceWidth, sourceHeight,
 								destX, destY, destWidth, destHeight);
-						VConsole.log("Drawing complete");
+						logger.fine("Drawing complete");
 					}
 				});
 			}
@@ -204,19 +221,15 @@ public class CanvasConnector extends AbstractComponentConnector implements
 					}
 				});
 			}
-			
+
 			@Override
-			public void bezierCurveTo(
-					final double cp1x, 
-					final double cp1y, 
-					final double cp2x,
-					final double cp2y, 
-					final double x, 
+			public void bezierCurveTo(final double cp1x, final double cp1y,
+					final double cp2x, final double cp2y, final double x,
 					final double y) {
 				runCommand(new Command() {
 					@Override
 					public void execute() {
-						ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y,  x, y);
+						ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
 					}
 				});
 			}
@@ -566,6 +579,24 @@ public class CanvasConnector extends AbstractComponentConnector implements
 	@Override
 	public void onStateChanged(StateChangeEvent stateChangeEvent) {
 		super.onStateChanged(stateChangeEvent);
+
+		// Only add a mouse move handler if someone is interested in, as
+		// otherwise
+		// they would generate a large amount of server side traffic.
+		if (stateChangeEvent.hasPropertyChanged("listenMouseMove")
+				&& getState().listenMouseMove)
+			getWidget().addMouseMoveHandler(new MouseMoveHandler() {
+				@Override
+				public void onMouseMove(MouseMoveEvent event) {
+					if (getState().listenMouseMove) {
+						MouseEventDetails med = MouseEventDetailsBuilder
+								.buildMouseEventDetails(event.getNativeEvent(),
+										getWidget().getElement());
+
+						rpc.mouseMoved(med);
+					}
+				}
+			});
 	}
 
 	@Override
@@ -600,4 +631,10 @@ public class CanvasConnector extends AbstractComponentConnector implements
 	public void clearCommands() {
 		commands.clear();
 	}
+
+	@Override
+	public CanvasState getState() {
+		return (CanvasState) super.getState();
+	}
+
 }

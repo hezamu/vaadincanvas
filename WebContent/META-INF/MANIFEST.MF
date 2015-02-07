@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Implementation-Title: vaadincanvas
+Implementation-Version: 2.1
+Vaadin-Widgetsets: org.vaadin.hezamu.canvas.CanvasWidgetset
+Vaadin-Package-Version: 1
+Class-Path: 
+

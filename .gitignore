@@ -2,10 +2,9 @@
 .project
 .settings
 build
-WebContent/VAADIN/widgetsets
-WebContent/VAADIN/gwt-unitCache
-WebContent/WEB-INF/web.xml
-WebContent/META-INF/MANIFEST.MF
+WebContent/VAADIN
+WebContent/WEB-INF
 *.launch
 .DS_Store
+*~
 
