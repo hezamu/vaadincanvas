@@ -52,7 +52,7 @@ public class Demo extends UI {
 ```
 
 ## Mouse events
-The `Canvas` component supports listening to mouse move, up and down events within the canvas area. Unfortunately the HTML5 Canvas API doesn't support objects, so you can only find out the coordinates where the click happened. Note that the mouse move listener will not trigger server roundtrips before you register to listen the mouse move eevents.
+The `Canvas` component supports listening to mouse move, up and down events within the canvas area. Unfortunately the HTML5 Canvas API doesn't support objects, so you can only find out the coordinates where the click happened. Note that the mouse move listener will not trigger server roundtrips before you register to listen the mouse move events.
 
 You can find out other details related to the click event using the `MouseEventDetails` instance you receive from the listener.
 
