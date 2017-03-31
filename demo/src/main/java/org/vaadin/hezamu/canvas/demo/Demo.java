@@ -1,4 +1,4 @@
-package org.vaadin.hezamu.canvas;
+package org.vaadin.hezamu.canvas.demo;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -13,14 +13,18 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
+import org.vaadin.hezamu.canvas.Canvas;
+
 @SuppressWarnings("serial")
-@Theme("valo")
-@Widgetset("org.vaadin.hezamu.canvas.CanvasWidgetset")
+//@Theme("valo")
+//@Widgetset("org.vaadin.hezamu.canvas.demo.DemoWidgetset")
 public class Demo extends UI {
 	private Canvas canvas;
 
-	@WebServlet(value = { "/*", "/VAADIN/*" }, asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = Demo.class)
+//	@WebServlet(value = { "/*", "/VAADIN/*" }, asyncSupported = true)
+//	@VaadinServletConfiguration(productionMode = false, ui = Demo.class)
+	@WebServlet(value = "/*", asyncSupported = true)
+	@VaadinServletConfiguration(productionMode = false, ui = Demo.class, widgetset = "org.vaadin.hezamu.canvas.demo.DemoWidgetset")
 	public static class Servlet extends VaadinServlet {
 	}
 

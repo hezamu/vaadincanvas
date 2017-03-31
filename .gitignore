@@ -1,10 +1,10 @@
 .classpath
 .project
 .settings
-build
-WebContent/VAADIN
-WebContent/WEB-INF
+.idea
+addon/target
+demo/target
+demo/src/main/webapp/VAADIN/widgetsets
 *.launch
 .DS_Store
 *~
-

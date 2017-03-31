@@ -1,8 +1,23 @@
-## What's this?
-This is a server-side Vaadin add-on for the HTML5 canvas. You add the `Canvas` component to your Vaadin UI, and can then draw on it using the Java API.
+# HTML5 Canvas add-on for Vaadin
+This is a Vaadin add-on that adds support for the HTML5 canvas. You add the `Canvas` component to your Vaadin UI, and can then draw on it using the Java API from your server-side code.
+
+## Features
+
+* Most of the [HTML5 Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+* Mouse move and click events
 
 ## Downloads
 Sources are available here, and you can download the add-on package from the [Vaadin add-on Directory](https://vaadin.com/addon/canvas).
+
+Versions are available for both Vaadin 7 and 8.
+
+## Development
+Clone the repo and start the demo with:
+```bash
+$ mvn jetty:run
+```
+
+Then you can just point your browser at [http://localhost:8080](http::localhos:8080) to see it in action.
 
 ## Compatibility
 This add-on is compatible with Vaadin 7. A canvas add-on for Vaadin 6 is available [here](https://vaadin.com/addon/canvaswidget).
@@ -57,6 +72,6 @@ The `Canvas` component supports listening to mouse move, up and down events with
 You can find out other details related to the click event using the `MouseEventDetails` instance you receive from the listener.
 
 ## Working with images
-The HTML5 Canvas image support contains a few pitfalls that complicate drawing images to the canvas. In practice, you should ensure that the image has been preloaded to the browser cache before trying to draw it.
+The HTML5 Canvas image support contains a few pitfalls that complicate drawing images to the canvas. In practice, you should ensure that the image has been preloaded to the browser cache before trying to draw it on the `Canvas`.
 
-To make sure that your images are preloaded before drawing you should first tell the component to load your images using the `loadImages(String[] urls)` method, and add a `CanvasImageLoadListener` to the `Canvas`. The listener will notify you when the images have been loaded, and you can start issuing `drawImage()` that work with the preloaded images.
+To make sure that your images are preloaded before drawing you should first tell the component to load your images using the `loadImages(String[] urls)` method, and add a `CanvasImageLoadListener` to the `Canvas`. The listener will notify you when the images have been loaded, and you can start issuing `drawImage()` commands that work with the preloaded images.
