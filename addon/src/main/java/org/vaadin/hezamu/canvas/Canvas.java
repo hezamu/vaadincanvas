@@ -44,13 +44,13 @@ public class Canvas extends AbstractComponent {
 			}
 
 			@Override
-			public void mouseDown(MouseEventDetails med) {
-				fireMouseDown();
+			public void mouseDown(MouseEventDetails mouseDetails) {
+				fireMouseDown(mouseDetails);
 			}
 
 			@Override
-			public void mouseUp(MouseEventDetails med) {
-				fireMouseUp();
+			public void mouseUp(MouseEventDetails mouseDetails) {
+				fireMouseUp(mouseDetails);
 			}
 		});
 	}
@@ -875,7 +875,7 @@ public class Canvas extends AbstractComponent {
 		/**
 		 * The canvas mouse Down event.
 		 */
-		public void onMouseDown();
+		public void onMouseDown(MouseEventDetails mouseDetails);
 	}
 
 	/**
@@ -902,9 +902,9 @@ public class Canvas extends AbstractComponent {
 		}
 	}
 
-	private void fireMouseDown() {
+	private void fireMouseDown(MouseEventDetails mouseDetails) {
 		for (CanvasMouseDownListener listener : mouseDownListeners) {
-			listener.onMouseDown();
+			listener.onMouseDown(mouseDetails);
 		}
 	}
 
@@ -922,7 +922,7 @@ public class Canvas extends AbstractComponent {
 		/**
 		 * The canvas mouse Down event.
 		 */
-		public void onMouseUp();
+		public void onMouseUp(MouseEventDetails mouseDetails);
 	}
 
 	/**
@@ -949,9 +949,9 @@ public class Canvas extends AbstractComponent {
 		}
 	}
 
-	private void fireMouseUp() {
+	private void fireMouseUp(MouseEventDetails mouseDetails) {
 		for (CanvasMouseUpListener listener : mouseUpListeners) {
-			listener.onMouseUp();
+			listener.onMouseUp(mouseDetails);
 		}
 	}
 

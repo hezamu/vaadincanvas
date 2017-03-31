@@ -7,8 +7,8 @@
     <groupId>org.vaadin.hezamu</groupId>
     <artifactId>canvas</artifactId>
     <packaging>jar</packaging>
-    <name>Canvas Add-on</name>
-    <version>2.2.0-SNAPSHOT</version>
+    <name>Canvas</name>
+    <version>2.3.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

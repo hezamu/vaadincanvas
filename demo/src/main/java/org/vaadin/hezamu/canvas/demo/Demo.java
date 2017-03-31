@@ -41,13 +41,22 @@ public class Demo extends UI {
 		// color which is black.
 		canvas.fillRect(10, 10, 20, 20);
 
-		canvas.addMouseMoveListener(new CanvasMouseMoveListener() {
-			@Override
-			public void onMove(MouseEventDetails mouseDetails) {
-				System.out.println("Mouse moved at "
-						+ mouseDetails.getClientX() + ","
-						+ mouseDetails.getClientY());
-			}
+		canvas.addMouseMoveListener((MouseEventDetails mouseDetails) -> {
+			System.out.println("Mouse moved at "
+					+ mouseDetails.getClientX() + ","
+					+ mouseDetails.getClientY());
+		});
+
+		canvas.addMouseDownListener((MouseEventDetails mouseDetails) -> {
+			System.out.println("Mouse down at "
+					+ mouseDetails.getClientX() + ","
+					+ mouseDetails.getClientY());
+		});
+
+		canvas.addMouseUpListener((MouseEventDetails mouseDetails) -> {
+			System.out.println("Mouse up at "
+					+ mouseDetails.getClientX() + ","
+					+ mouseDetails.getClientY());
 		});
 	}
 }
