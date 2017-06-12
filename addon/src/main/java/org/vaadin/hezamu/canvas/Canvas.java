@@ -186,6 +186,20 @@ public class Canvas extends AbstractComponent {
 	public void setFont(String font) {
 		rpc.setFont(font);
 	}
+	
+	/**
+         * Sets the text align used when drawing text. Possible values are:
+         * "start", "end", "left", "right", "center"
+         * 
+         * The {@link #fillText(String, double, double, double)} will use the
+	 * specified textalign value when positioning the text on the canvas.
+         * 
+         * @param textAlign 
+         *              the new text align
+         */
+        public void setTextAlign(String textAlign) {
+                rpc.setTextAlign(textAlign);
+        }
 
 	/**
 	 * Sets the text baseline used when drawing text. Possible values are:
