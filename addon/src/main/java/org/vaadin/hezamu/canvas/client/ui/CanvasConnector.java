@@ -182,6 +182,16 @@ public class CanvasConnector extends AbstractComponentConnector implements
 			}
 
 			@Override
+			public void setTextAlign(final String textAlign) {
+				runCommand(new Command() {
+					@Override
+					public void execute() {
+						ctx.setTextAlign(textAlign);
+					}
+				});
+			}
+			
+			@Override
 			public void setTextBaseline(final String textBaseline) {
 				runCommand(new Command() {
 					@Override

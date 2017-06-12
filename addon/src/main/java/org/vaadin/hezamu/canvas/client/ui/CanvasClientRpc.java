@@ -21,6 +21,8 @@ public interface CanvasClientRpc extends ClientRpc {
 
 	public void setFont(String font);
 
+	public void setTextAlign(String textAlign);
+	
 	public void setTextBaseline(String textBaseline);
 
 	public void lineTo(Double x, Double y);
