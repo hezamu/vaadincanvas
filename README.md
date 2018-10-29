@@ -1,3 +1,6 @@
+[![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/canvas)
+[![Stars on Vaadin Directory](https://img.shields.io/vaadin-directory/star/canvas.svg)](https://vaadin.com/directory/component/canvas)
+
 # HTML5 Canvas add-on for Vaadin
 This is a Vaadin add-on that adds support for the HTML5 canvas. You add the `Canvas` component to your Vaadin UI, and can then draw on it using the Java API from your server-side code.
 
